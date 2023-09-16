@@ -1,0 +1,33 @@
+name: Chatter
+version: 1.0.0
+author: RyTheFirst
+website: rythefirst.uk
+main: uk.rythefirst.chatter.Main
+api-version: 1.19
+commands:
+ jmessage:
+  description: Set Join message
+  aliases: [joinmessage]
+ lmessage:
+  description: Set Leave message
+  aliases: [leavemessage] 
+ nick:
+  description: Change your nickname.
+  aliases: [nickname]
+ chreload:
+  description: Reloads the config.
+permissions:
+ chatter.mod:
+  description: Allows use of /jmessage clear & /lmessage clear & /nick clear
+ chatter.jmessage:
+  description: Allows use of /jmessage set
+ chatter.lmessage:
+  description: Allows use of /lmessage set
+ chatter.nick:
+  description: Allows use of /nick set
+ chatter.reload:
+  description: Allows the use of /chreload
+ chatter.nickcc:
+  description: Allows CC in Nicknames.
+
+softdepend: [Luckperms]

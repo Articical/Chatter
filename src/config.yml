@@ -1,0 +1,33 @@
+# Chatter Config
+
+# Format for Chat messages
+# Usable terms:
+# <lp_prefix> - Will be replaced with the users Luck perms Prefix.
+# <name> - Will be replaced with the users real name.
+# <displayname> - Will be replaced with the users nickname, or name with luckperms prefix attached (if they have one)
+# <message> - Will be replaced with the users message.
+# Full colour code support - using the '&' prefix. Full list: https://www.colorschemer.com/minecraft-color-codes/
+# If you'd like prefixes to show in 
+format: "<lp_prefix> <displayname> &6>> &r<message>"
+
+# Show Luckperms prefix in tab?
+prefix-in-tab: true
+
+# Show Nicknames in tab?
+nick-in-tab: true
+
+# Default Join Message (no custom message set) (also supports the above terms)
+djoin: "<displayname> &6is here!"
+
+# Default Leave Message (no custom message set) (also supports the above terms)
+dleave: "<displayname> &4just left :("
+
+# Tablist header & footer
+tab-enabled: true
+
+tab-header: 
+ - "&6&lWelcome"
+ - "&2&l<displayname>"
+ 
+tab-footer:
+ - "&6&lSpigot.org"

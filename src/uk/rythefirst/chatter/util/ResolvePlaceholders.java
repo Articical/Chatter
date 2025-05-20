@@ -2,6 +2,7 @@ package uk.rythefirst.chatter.util;
 
 import java.text.DecimalFormat;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import net.luckperms.api.cacheddata.CachedMetaData;
@@ -10,7 +11,7 @@ import uk.rythefirst.chatter.Main;
 
 public class ResolvePlaceholders {
 
-	@SuppressWarnings({ "deprecation", "resource" })
+	@SuppressWarnings("unused")
 	public static String resolve(Player p, String string) {
 
 		User user = Perms.loadUser(p);
@@ -25,6 +26,8 @@ public class ResolvePlaceholders {
 		string = string.replaceAll("<displayname>", p.getDisplayName());
 		string = string.replaceAll("<name>", p.getName());
 		string = string.replaceAll("<nick>", Main.NickMgr.getNickName(p));
+		string = string.replaceAll("<tps>", String.valueOf(Main.tpscalc.getTps()));
+		string = ChatColor.translateAlternateColorCodes('&', string);
 		DecimalFormat df = new DecimalFormat("#.##");
 
 		return string;

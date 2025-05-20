@@ -31,3 +31,6 @@ tab-header:
  
 tab-footer:
  - "&6&lSpigot.org"
+ 
+#Value of XP (per 10 XP)
+XPValue: 15

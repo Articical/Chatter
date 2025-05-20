@@ -10,7 +10,16 @@ public class PlayerLeave implements Listener {
 
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
+		
+		if(Main.pvpManager.getLastHitEpoch(e.getPlayer()) != null)
+		
+		if(Main.hManager.isHidden(e.getPlayer().getUniqueId())) {
+			Main.hManager.unHide(e.getPlayer());
+			return;
+		}
+		
 		e.setQuitMessage(Main.LeaveMessageMgr.getLMessage(e.getPlayer().getUniqueId()));
+		
 	}
 
 }

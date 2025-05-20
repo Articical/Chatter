@@ -1,49 +1,52 @@
 package uk.rythefirst.chatter.util;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import uk.rythefirst.chatter.Main;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class TpsCalc {
 
-	public int tps = 0;
+	private final JavaPlugin plugin;
+	private long lastTime;
+	private double tps = 20.0;
+	private static final int INTERVAL_TICKS = 100;
+	
+	public TpsCalc(JavaPlugin plugin) {
+        this.plugin = plugin;
+        startMonitoring();
+    }
 
-	public BukkitTask tpsTask = null;
+    private void startMonitoring() {
+        lastTime = System.nanoTime();
 
-	public void startCalc() {
-		tpsTask = new BukkitRunnable() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                long now = System.nanoTime();
+                long elapsed = now - lastTime;
+                lastTime = now;
 
-			long sec;
-			long currentSec;
-			int ticks;
+                double seconds = elapsed / 1.0E9;
+                double currentTps = INTERVAL_TICKS / seconds;
 
-			@Override
-			public void run() {
-				sec = (System.currentTimeMillis() / 1000);
+                // Clamp the value to 20 max TPS
+                tps = Math.min(20.0, currentTps);
+            }
+        }.runTaskTimer(plugin, INTERVAL_TICKS, INTERVAL_TICKS);
+    }
 
-				if (currentSec == sec) {
-					// this code block triggers each tick
+    public double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
 
-					ticks++;
-				} else {
-					// this code block triggers each second
-
-					currentSec = sec;
-					tps = (tps == 0 ? ticks : ((tps + ticks) / 2));
-					ticks = 0;
-
-				}
-
-			}
-		}.runTaskTimer(Main.instance, 0, 1);
-	}
-
-	public void stopCalc() {
-		if (!(tpsTask == null)) {
-			tpsTask.cancel();
-			tpsTask = null;
-		}
-	}
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+    
+    public double getTps() {
+        return round(tps, 2);
+    }
 
 }

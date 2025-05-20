@@ -57,7 +57,8 @@ public class Nick implements CommandExecutor {
 				}
 			}
 			Main.NickMgr.setNickName(player, sb.toString());
-		} else if (args[0].equalsIgnoreCase("clear")) {
+		} 
+		else if (args[0].equalsIgnoreCase("clear")) {
 			if (!(player.hasPermission("chatter.mod"))) {
 				return true;
 			}
@@ -65,12 +66,14 @@ public class Nick implements CommandExecutor {
 				Main.NickMgr.clearNickName(Bukkit.getPlayer(args[1]));
 				player.sendMessage(ChatColor.GREEN + "Cleared " + args[1] + "'s Nick");
 			}
-		} else if (args[0].equalsIgnoreCase("reset")) {
+		} 
+		else if (args[0].equalsIgnoreCase("reset")) {
 			if (args.length == 1) {
 				Main.NickMgr.clearNickName(player);
 				player.sendMessage(ChatColor.GREEN + "Cleared your Nick");
 			}
-		} else if (args[0].equalsIgnoreCase("who")) {
+		} 
+		else if (args[0].equalsIgnoreCase("who")) {
 			if (args.length == 2) {
 				if (!(Main.NickMgr.getNickName(Bukkit.getPlayer(args[1])) == null)) {
 					String nick = Main.NickMgr.getNickName(Bukkit.getPlayer(args[1]));
@@ -81,7 +84,8 @@ public class Nick implements CommandExecutor {
 				}
 
 			}
-		} else if (args[0].equalsIgnoreCase("list")) {
+		} 
+		else if (args[0].equalsIgnoreCase("list")) {
 			if (args.length == 1) {
 				TreeMap<String, String> mapc = Main.cache.nickMap;
 				for (Entry<String, String> entry : mapc.entrySet()) {

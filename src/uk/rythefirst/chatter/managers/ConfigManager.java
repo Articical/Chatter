@@ -26,7 +26,10 @@ public class ConfigManager {
 
 	private File nickFile = new File(Main.instance.getDataFolder() + "/nick.yml");
 	private YamlConfiguration nickCfg;
-
+	
+	private File dragonDamageFile = new File(Main.instance.getDataFolder() + "/nick.yml");
+	private YamlConfiguration dragonCfg;
+	
 	public void loadConfig() {
 		Main.instance.saveResource("config.yml", false);
 		configYaml = YamlConfiguration.loadConfiguration(configFile);
@@ -37,6 +40,7 @@ public class ConfigManager {
 		Main.cache.format = configYaml.getString("format");
 		Main.cache.defaultJoinMsg = configYaml.getString("djoin");
 		Main.cache.defaultLeaveMsg = configYaml.getString("dleave");
+		Main.xpValue = configYaml.getDouble("XPValue");
 		if (!(configYaml.contains("tab-enabled"))) {
 			ArrayList<String> headerDef = new ArrayList<String>();
 			headerDef.add("&6&lWelcome &2&l<displayname>");
@@ -63,9 +67,16 @@ public class ConfigManager {
 			Main.tabMgr.stopTimer();
 		}
 	}
+	
+	
+	public double getXPValue() {
+		
+		return configYaml.getDouble("XPValue");
+	}
 
 	public ConfigManager() {
 		loadConfig();
+		
 		if (!(jMsgFile.exists())) {
 			Bukkit.getLogger().info(Templates.consolePrefix + "Jmsg File not found, creating...");
 			try {
@@ -107,9 +118,26 @@ public class ConfigManager {
 		} else {
 			nickCfg = YamlConfiguration.loadConfiguration(nickFile);
 		}
+		
+		if (!(dragonDamageFile.exists())) {
+			Bukkit.getLogger().info(Templates.consolePrefix + "DragonDamage File not found, creating...");
+			try {
+				dragonDamageFile.createNewFile();
+				this.dragonCfg = YamlConfiguration.loadConfiguration(dragonDamageFile);
+				dragonCfg.set("values", new ArrayList<String>());
+				dragonCfg.save(dragonDamageFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			dragonCfg = YamlConfiguration.loadConfiguration(dragonDamageFile);
+		}
+		
+		Main.xpValue = configYaml.getDouble("XPValue");
+		
 	}
 
-	public void saveJoinMessage() {
+	public void saveJoinMessage(Boolean disabling) {
 		TreeMap<String, String> prefixMap = Main.cache.jMessageMap;
 		String divide = "#::#";
 		List<String> fixLst = new ArrayList<String>();
@@ -117,12 +145,21 @@ public class ConfigManager {
 			fixLst.add(entry.getKey() + divide + entry.getValue());
 		}
 		jmsgCfg.set("messages", fixLst);
+		if(!disabling) {
+		Bukkit.getScheduler().runTaskAsynchronously(Main.instance, () -> {
 		try {
 			jmsgCfg.save(jMsgFile);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}});
+		}else {
+			try {
+				jmsgCfg.save(jMsgFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			}
 		}
-	}
 
 	public void loadJoinMessage() {
 		String divide = "#::#";
@@ -133,7 +170,7 @@ public class ConfigManager {
 		}
 	}
 
-	public void saveLeaveMessage() {
+	public void saveLeaveMessage(Boolean disabling) {
 		TreeMap<String, String> leaveMap = Main.cache.lMessageMap;
 		String divide = "#::#";
 		List<String> fixLst = new ArrayList<String>();
@@ -141,10 +178,19 @@ public class ConfigManager {
 			fixLst.add(entry.getKey() + divide + entry.getValue());
 		}
 		lmsgCfg.set("messages", fixLst);
+		if(!(disabling)) {
+		Bukkit.getScheduler().runTaskAsynchronously(Main.instance, () -> {
 		try {
 			lmsgCfg.save(lMsgFile);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}});
+		}else {
+			try {
+				lmsgCfg.save(lMsgFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -166,7 +212,7 @@ public class ConfigManager {
 		}
 	}
 
-	public void saveNicks() {
+	public void saveNicks(Boolean disabling) {
 		TreeMap<String, String> saveMap = Main.cache.nickMap;
 		String divide = "#::#";
 		List<String> pvpLst = new ArrayList<String>();
@@ -174,10 +220,19 @@ public class ConfigManager {
 			pvpLst.add(entry.getKey() + divide + entry.getValue());
 		}
 		nickCfg.set("nicknames", pvpLst);
+		if(!(disabling)) {
+		Bukkit.getScheduler().runTaskAsynchronously(Main.instance, () -> {
 		try {
 			nickCfg.save(nickFile);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}});
+		}else {
+			try {
+				nickCfg.save(nickFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -202,6 +257,50 @@ public class ConfigManager {
 		Main.cache.tabEnabled = configYaml.getBoolean("tab-enabled");
 		Main.cache.tabHeader = configYaml.getStringList("tab-header");
 		Main.cache.tabFooter = configYaml.getStringList("tab-footer");
+	}
+	
+	public void saveDragonDamage(Boolean disabling) {
+		TreeMap<String, Double> saveMap = Main.cache.DragonDamageMap;
+		String divide = "#::#";
+		List<String> pvpLst = new ArrayList<String>();
+		for (Entry<String, Double> entry : saveMap.entrySet()) {
+			pvpLst.add(entry.getKey() + divide + entry.getValue());
+		}
+		dragonCfg.set("values", pvpLst);
+		if(!disabling) {
+		Bukkit.getScheduler().runTaskAsynchronously(Main.instance, () -> {
+		try {
+			dragonCfg.save(dragonDamageFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}});
+		}else {
+			try {
+				dragonCfg.save(dragonDamageFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void loadDragonDamage() {
+		String divide = "#::#";
+		List<String> loadLst = dragonCfg.getStringList("values");
+		for (String str : loadLst) {
+			String[] strSplit = str.split(divide);
+			try {
+				Double.parseDouble(strSplit[1]);
+			} catch (NumberFormatException e) {
+				return;
+			}
+			Main.cache.DragonDamageMap.put(strSplit[0], Double.parseDouble(strSplit[1]));
+		}
+	}
+	
+	public void saveAllAsync() {
+		this.saveJoinMessage(false);
+		this.saveLeaveMessage(false);
+		this.saveNicks(false);
 	}
 
 }

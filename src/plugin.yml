@@ -16,9 +16,39 @@ commands:
   aliases: [nickname]
  chreload:
   description: Reloads the config.
+ mding:
+  description: Mass Ding
+ togglemention:
+  description: Toggle mentions
+ bounties:
+  description: Bounties.
+ bountiessave:
+  description: Bounties save.
+ removebounty:
+  description: Remove bounty.
+ setbounty:
+  description: Set Bounty.
+ russianroulette:
+  description: Russian Roulette.
+ cast:
+  description: broadcast.
+ twitch:
+  description: check the status of a twitch stream.
+ modmode:
+  description: Modmode for mods.
+ help:
+  description: Simple help command.
+ modhelp:
+  description: Moderator help.
+ togglechat:
+  description: Togglechat
+ clearchat:
+  description: Clearchat
+ sellxp:
+  description: Sell XP for $$
+ bansword:
+  description: Spawns the ban sword.
 permissions:
- chatter.mod:
-  description: Allows use of /jmessage clear & /lmessage clear & /nick clear
  chatter.jmessage:
   description: Allows use of /jmessage set
  chatter.lmessage:
@@ -29,5 +59,17 @@ permissions:
   description: Allows the use of /chreload
  chatter.nickcc:
   description: Allows CC in Nicknames.
+ chatter.admin:
+  description: Allows the use of /Mding
+ chatter.mod:
+  description: Allows the use of /modmode
+ bounties.staff:
+  description: Allows Saving Bounties
+ chatter.mention.staff:
+  description: Allows bypassing mention disables.
+ chatter.staff.bsword:
+  description: Allows the bansword command.
+ chatter.staff:
+  description: ignore player in getPlayerCountExclStaff
 
 softdepend: [Luckperms]

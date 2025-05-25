@@ -27,7 +27,7 @@ public class ConfigManager {
 	private File nickFile = new File(Main.instance.getDataFolder() + "/nick.yml");
 	private YamlConfiguration nickCfg;
 	
-	private File dragonDamageFile = new File(Main.instance.getDataFolder() + "/nick.yml");
+	private File dragonDamageFile = new File(Main.instance.getDataFolder() + "/ddamage.yml");
 	private YamlConfiguration dragonCfg;
 	
 	public void loadConfig() {

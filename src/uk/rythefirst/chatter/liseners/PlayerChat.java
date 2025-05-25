@@ -97,6 +97,12 @@ public class PlayerChat implements Listener {
 		}
 		cFormat = cFormat.replace("<message>", message);
 		e.setFormat(cFormat);
+		//e.setCancelled(true);
+		//String finalMessage = cFormat; // already replaced <name>, <lp_prefix>, etc.
+
+		/*for (Player recipient : e.getRecipients()) {
+		    recipient.sendMessage(finalMessage);
+		}*/
 		
 		String name = e.getMessage().toLowerCase();	
 		

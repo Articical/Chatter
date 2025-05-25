@@ -8,20 +8,28 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EnderCrystal;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
+import net.md_5.bungee.api.ChatColor;
 import uk.rythefirst.chatter.Main;
+import uk.rythefirst.chatter.util.Chat;
 
 public class Dragon implements Listener{
 	
@@ -32,6 +40,16 @@ public class Dragon implements Listener{
 	@EventHandler
     public void onDragonSpawn(EntitySpawnEvent event) {
         if (event.getEntity() instanceof EnderDragon) {
+        	
+        	Chat.SendCenteredServerChatAnnounce(ChatColor.GOLD + "The " + ChatColor.DARK_PURPLE + "Ender Dragon" + ChatColor.GOLD + " has Returned!");
+            
+            for(Player player : Bukkit.getOnlinePlayers()) {
+            	if(player.getWorld().getName().toLowerCase() == "world_the_end") {
+            		player.sendTitle(ChatColor.DARK_PURPLE + "The Ender Dragon has returned!", ChatColor.GOLD + "Watch your back!", 10, 70, 20);
+            		player.playSound(player.getLocation(), Sound.ENTITY_PARROT_IMITATE_ENDER_DRAGON, SoundCategory.AMBIENT, 2, 0.3f);
+            	}
+            }
+        	
         	EnderDragon dragon = (EnderDragon) event.getEntity();
             if (dragon.getAttribute(Attribute.MAX_HEALTH) != null) {
                 dragon.getAttribute(Attribute.MAX_HEALTH).setBaseValue(1000.0);
@@ -40,19 +58,35 @@ public class Dragon implements Listener{
                 Main.instance.getLogger().info("Boosted dragon HP to 1000.");
             }
         }
+        
     }
 	
 	@EventHandler
     public void onDragonDamaged(EntityDamageByEntityEvent event) {
 		
+		//Check that the entity being damaged is actually a dragon
         if (!(event.getEntity() instanceof EnderDragon)) return;
-        if(event.getDamager() instanceof EnderCrystal) {
+        
+        //If it's an explosion, cancel it (no cheesing thanks)
+        if(event.getDamager() instanceof Explosive || event.getDamager().getType().toString().contains("EXPLOSION")) {
         	event.setCancelled(true);
         	return;
         }
+        //Cast the dragon as the entity of the event and declare a null player for later use.
         EnderDragon dragon = (EnderDragon) event.getEntity();
-        if (!(event.getDamager() instanceof Player)) return;
-        Player player = (Player) event.getDamager();
+        Player player = null;
+
+        //If the entity that damages the dragon is an arrow then set "player" to the person who shot the arrow.
+        if (event.getDamager() instanceof Arrow) {
+            Arrow arrow = (Arrow) event.getDamager();
+            if (arrow.getShooter() instanceof Player) {
+                player = (Player) arrow.getShooter();
+            }
+        } else if (event.getDamager() instanceof Player) {
+            player = (Player) event.getDamager();
+        }
+
+        if (player == null) return;
         UUID playerId = player.getUniqueId();
         UUID dragonId = dragon.getUniqueId();
         double damage = event.getFinalDamage();
@@ -60,7 +94,18 @@ public class Dragon implements Listener{
         dragonDamageMap
         .computeIfAbsent(dragonId, k -> new HashMap<>())
         .merge(playerId, damage, Double::sum);
+        
+        event.setDamage(event.getDamage() * 0.75);
     }
+	
+	@EventHandler
+	public void onDragonDamagedByBlockExplosion(EntityDamageEvent event) {
+	    if (event.getEntity().getType() == EntityType.ENDER_DRAGON) {
+	        if (event.getCause() == DamageCause.BLOCK_EXPLOSION) {
+	            event.setCancelled(true);
+	        }
+	    }
+	}
 	
 	@EventHandler
     public void onDragonDeath(EntityDeathEvent event) {

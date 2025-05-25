@@ -36,6 +36,7 @@ import uk.rythefirst.chatter.commands.Twitch;
 import uk.rythefirst.chatter.layouts.ChatState;
 import uk.rythefirst.chatter.liseners.CommandPreProc;
 import uk.rythefirst.chatter.liseners.Dragon;
+import uk.rythefirst.chatter.liseners.Headshots;
 import uk.rythefirst.chatter.liseners.InventoryClick;
 import uk.rythefirst.chatter.liseners.PlayerChat;
 import uk.rythefirst.chatter.liseners.PlayerDamagePlayer;
@@ -136,6 +137,7 @@ public class Main extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new PlayerDamagePlayer(), this);
 		Bukkit.getPluginManager().registerEvents(new CommandPreProc(), this);
 		Bukkit.getPluginManager().registerEvents(new Dragon(), this);
+		Bukkit.getPluginManager().registerEvents(new Headshots(), this);
 
 		this.getCommand("chreload").setExecutor(new Chreload());
 		

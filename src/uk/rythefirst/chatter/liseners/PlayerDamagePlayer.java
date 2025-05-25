@@ -24,7 +24,7 @@ public class PlayerDamagePlayer implements Listener{
 			return;
 		}
 		
-			Player dmger = (Player) e.getDamager();
+			Player dmger = (Player) e.getDamageSource().getCausingEntity();
 			if (dmger.getItemInHand() != null) {
 				ItemStack is = dmger.getItemInHand();
 				ItemMeta im = is.getItemMeta();

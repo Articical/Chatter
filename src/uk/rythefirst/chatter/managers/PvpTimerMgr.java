@@ -24,6 +24,7 @@ public class PvpTimerMgr {
 		return true;
 	}
 	
+	@SuppressWarnings("unused")
 	public Boolean milisSinceLastHitGreater(Player p, Long greaterThan) {
 
 		Long newEpoch = java.time.Instant.now().toEpochMilli();

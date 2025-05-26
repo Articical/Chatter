@@ -83,9 +83,9 @@ public class ChatWordGame {
 						maxnum = wordCount - 1;
 					}
 					
-					int chosen = rand.nextInt(0, maxnum);
+					int chosen = rand.nextInt(maxnum);
 					while(chosen == LastWord) {
-						chosen = rand.nextInt(0, maxnum);
+						chosen = rand.nextInt(maxnum);
 					}
 					
 

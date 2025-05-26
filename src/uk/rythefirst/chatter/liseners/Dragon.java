@@ -95,7 +95,7 @@ public class Dragon implements Listener{
         .computeIfAbsent(dragonId, k -> new HashMap<>())
         .merge(playerId, damage, Double::sum);
         
-        event.setDamage(event.getDamage() * 0.75);
+        event.setDamage(event.getDamage() * 0.5);
     }
 	
 	@EventHandler
